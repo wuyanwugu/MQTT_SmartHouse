@@ -176,15 +176,15 @@ void StartDefaultTask(void *argument)
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
-//void vApplicationIdleHook(void*parm)
-//{
-//	vTaskList(g_task_infor);
-//		for(int i = 0 ;i<16;i++)
-//	{
-//		printf("-");
-//	}
-//	printf("\n\r\n\r");
-//	printf("%s\n\r",g_task_infor);
-//}
+void vApplicationIdleHook(void*parm)
+{
+	vTaskList(g_task_infor);
+		for(int i = 0 ;i<16;i++)
+	{
+		printf("-");
+	}
+	printf("\n\r\n\r");
+	printf("%s\n\r",g_task_infor);
+}
 /* USER CODE END Application */
 

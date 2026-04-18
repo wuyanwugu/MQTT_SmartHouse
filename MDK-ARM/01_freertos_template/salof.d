@@ -1,0 +1,9 @@
+01_freertos_template\salof.o: ..\Middlewares\MQTTclient\common\log\salof.c
+01_freertos_template\salof.o: ..\Middlewares\MQTTclient\common\log\salof.h
+01_freertos_template\salof.o: ..\Middlewares\MQTTclient\common\log\salof_defconfig.h
+01_freertos_template\salof.o: ..\Middlewares\MQTTclient\common\log\salof_config.h
+01_freertos_template\salof.o: ../Middlewares/MQTTclient/mqttclient/mqtt_config.h
+01_freertos_template\salof.o: ..\Middlewares\MQTTclient\common\log\format.h
+01_freertos_template\salof.o: D:\KeilMDK\ARM\ARMCC\Bin\..\include\stdarg.h
+01_freertos_template\salof.o: ..\Middlewares\MQTTclient\common\log\fifo.h
+01_freertos_template\salof.o: D:\KeilMDK\ARM\ARMCC\Bin\..\include\stdio.h

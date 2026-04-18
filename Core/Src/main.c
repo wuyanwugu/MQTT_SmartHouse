@@ -19,12 +19,12 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
-#include "adc.h"
+//#include "adc.h"
 #include "i2c.h"
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
-#include "usb.h"
+//#include "usb.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -104,9 +104,8 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
-  MX_ADC1_Init();
+//  MX_ADC1_Init();//光敏电阻（被占用）
   MX_SPI1_Init();
-  MX_USB_PCD_Init();
   MX_TIM1_Init();
   MX_TIM2_Init();
   MX_TIM3_Init();
@@ -243,15 +242,19 @@ void MQTT_Task(void*parm)
 			printf("MQTT Broker connect failed\r\n");
 		}
 		
-    mqtt_subscribe(client, "topic1", QOS0, topic1_handler);
+    res =mqtt_subscribe(client, "topic1", QOS0, topic1_handler);
+    if(MQTT_SUCCESS_ERROR != res)
+		{
+			printf("MQTT Broker subscribe topic1 failed\r\n");
+		}
 	
-//		mqtt_message_t msg;
-//		msg.qos = 0;
-//    msg.payload = "test_task\r\n";
-//    msg.payloadlen = strlen(msg.payload);
+		mqtt_message_t msg;
+		msg.qos = 0;
+    msg.payload = "test_task\r\n";
+    msg.payloadlen = strlen(msg.payload);
 		while(1)
 		{
-			
+			mqtt_publish(client, "mcu_test", &msg);
 			vTaskDelay(3000);
 		}
 }

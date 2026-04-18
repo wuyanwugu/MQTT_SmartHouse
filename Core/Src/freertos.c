@@ -18,7 +18,7 @@
 #include "driver_motor.h"
 #include "driver_key.h"
 #include "driver_uart.h"
-
+#include "driver_sg90.h"
 /**
   ******************************************************************************
   * File Name          : freertos.c
@@ -68,7 +68,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-char g_task_infor[200];
+static char g_task_infor[200];
 
 TaskHandle_t AT_pars_handle;//AT指令分析任务句柄
 /* USER CODE END Variables */
@@ -82,7 +82,20 @@ const osThreadAttr_t defaultTask_attributes = {
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
+/*硬件初始化函数*/
+void BSP_Init(void)
+{
+              //LED初始化（在main.c中MX_GPIO_Init()初始化）
+	LCD_Init();  //OLED初始化
+	LCD_Clear();
+	sg90_Init(); //舵机初始化
+	MPU6050_Init();//MPU6050初始化
+  DHT11_Init(); //DHT11初始化
+  PassiveBuzzer_Init();//无源蜂鸣器初始化
+  PassiveBuzzer_Control(0);
+  ColorLED_Init();//全彩LED初始化
 
+}
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void *argument);
@@ -96,7 +109,7 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
   */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
-	AT_Init();
+	AT_Init();//AT命令相关程序初始化
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -145,13 +158,13 @@ void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
-  LCD_Init();
-  LCD_Clear();
-//	uart3_write("AT\r\n",4,0xffff);
+	/*硬件初始化*/
+  //BSP_Init();
+	
 	for(;;)
 	{
-		
-		vTaskDelay(100);
+
+//		vTaskDelay(100);
     //Led_Test();
     //LCD_Test();
 	//MPU6050_Test(); 
@@ -176,15 +189,15 @@ void StartDefaultTask(void *argument)
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
-void vApplicationIdleHook(void*parm)
-{
-	vTaskList(g_task_infor);
-		for(int i = 0 ;i<16;i++)
-	{
-		printf("-");
-	}
-	printf("\n\r\n\r");
-	printf("%s\n\r",g_task_infor);
-}
+//void vApplicationIdleHook(void*parm)
+//{
+//	vTaskList(g_task_infor);
+//		for(int i = 0 ;i<16;i++)
+//	{
+//		printf("-");
+//	}
+//	printf("\n\r\n\r");
+//	printf("%s\n\r",g_task_infor);
+//}
 /* USER CODE END Application */
 

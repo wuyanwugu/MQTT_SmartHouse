@@ -193,11 +193,6 @@ void Processr_recv_data(char*buf)
 		GiveATstatus(AT_ERR);
 		return;
 	}
-//	while(len--)
-//	{
-//		HAL_AT_Recv((char*)&g_AT_process_data_buff.buf[i++],portMAX_DELAY);
-//		platform_mutex_unlock(&g_at_rece_mutex);
-//	}
 	while(i<len)
 	{
 		HAL_AT_Recv(&buf[i],portMAX_DELAY);
@@ -215,10 +210,6 @@ void AT_Parse(void*parmas)
 
 	while(1)
 	{
-//		if(0 < ulTaskNotifyTake(pdTRUE,portMAX_DELAY))//等待esp8266传来数据
-//		{
-//			/*读数据*/
-//			circle_buf_read(&g_circle_buff,&rx_buf[i++]);
 		 /*HAL层读数据阻塞*/
 			HAL_AT_Recv(&rx_buf[i],portMAX_DELAY);
 		  rx_buf[i+1] = '\0';

@@ -1,0 +1,10 @@
+01_freertos_template\mqttsmart.o: ..\Core\Src\mqttsmart.c
+01_freertos_template\mqttsmart.o: ../Drivers/DshanMCU-F103/driver_led.h
+01_freertos_template\mqttsmart.o: ../Drivers/DshanMCU-F103/driver_lcd.h
+01_freertos_template\mqttsmart.o: D:\KeilMDK\ARM\ARMCC\Bin\..\include\stdint.h
+01_freertos_template\mqttsmart.o: ../Drivers/DshanMCU-F103/driver_mpu6050.h
+01_freertos_template\mqttsmart.o: ../Drivers/DshanMCU-F103/driver_dht11.h
+01_freertos_template\mqttsmart.o: ../Drivers/DshanMCU-F103/driver_passive_buzzer.h
+01_freertos_template\mqttsmart.o: ../Drivers/DshanMCU-F103/driver_color_led.h
+01_freertos_template\mqttsmart.o: ../Drivers/DshanMCU-F103/driver_sg90.h
+01_freertos_template\mqttsmart.o: D:\KeilMDK\ARM\ARMCC\Bin\..\include\string.h

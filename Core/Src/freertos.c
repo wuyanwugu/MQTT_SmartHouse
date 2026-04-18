@@ -68,7 +68,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-static char g_task_infor[200];
+
 
 TaskHandle_t AT_pars_handle;//AT指令分析任务句柄
 /* USER CODE END Variables */
@@ -85,16 +85,16 @@ const osThreadAttr_t defaultTask_attributes = {
 /*硬件初始化函数*/
 void BSP_Init(void)
 {
-              //LED初始化（在main.c中MX_GPIO_Init()初始化）
+  Led_Control(1,0);    //LED初始化（在main.c中MX_GPIO_Init()初始化）
 	LCD_Init();  //OLED初始化
 	LCD_Clear();
 	sg90_Init(); //舵机初始化
+	sg90_SetAngle(0);
 	MPU6050_Init();//MPU6050初始化
   DHT11_Init(); //DHT11初始化
   PassiveBuzzer_Init();//无源蜂鸣器初始化
   PassiveBuzzer_Control(0);
-  ColorLED_Init();//全彩LED初始化
-
+	ColorLED_Set(0);//全彩LED初始化
 }
 /* USER CODE END FunctionPrototypes */
 
@@ -110,6 +110,8 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
 	AT_Init();//AT命令相关程序初始化
+			/*硬件初始化*/
+  BSP_Init();
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -131,13 +133,14 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* creation of defaultTask */
-	extern void MQTT_Task(void*parm);
-	xTaskCreate(AT_Parse,"AT_parse",68,NULL,osPriorityNormal,&AT_pars_handle);
-	xTaskCreate(MQTT_Task,"MQTT_Task",150,NULL,osPriorityNormal,NULL);
-  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+
+  //defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 	
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
+	extern void MQTT_Task(void*parm);
+	xTaskCreate(AT_Parse,"AT_parse",68,NULL,osPriorityNormal,&AT_pars_handle);
+	xTaskCreate(MQTT_Task,"MQTT_Task",150,NULL,osPriorityNormal,NULL);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -158,13 +161,12 @@ void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
-	/*硬件初始化*/
-  //BSP_Init();
+
 	
 	for(;;)
 	{
 
-//		vTaskDelay(100);
+		vTaskDelay(100);
     //Led_Test();
     //LCD_Test();
 	//MPU6050_Test(); 
@@ -189,6 +191,8 @@ void StartDefaultTask(void *argument)
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
+/*----------------打印所有任务空闲栈大小----------------------*/
+//static char g_task_infor[200];
 //void vApplicationIdleHook(void*parm)
 //{
 //	vTaskList(g_task_infor);

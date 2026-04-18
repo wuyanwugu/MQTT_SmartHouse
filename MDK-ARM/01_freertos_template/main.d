@@ -103,3 +103,4 @@
 01_freertos_template\main.o: ../Middlewares/MQTTclient/network/network.h
 01_freertos_template\main.o: ../Middlewares/MQTTclient/common/random.h
 01_freertos_template\main.o: ../Middlewares/MQTTclient/common/mqtt_error.h
+01_freertos_template\main.o: ../Core/Inc/mqttsmart.h

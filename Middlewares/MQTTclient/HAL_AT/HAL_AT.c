@@ -26,13 +26,13 @@ void HAL_AT_Recv(char *c,unsigned int timeout)
 {
 	while(1)
 	{
-		if(0 == circle_buf_read(&g_circle_buff,(uint8_t*)c))
+		if(0 == circle_buf_read(&g_circle_buff,(uint8_t*)c))/*读数据*/
 		{
 			return;
 		}
 		else
 		{
-			ulTaskNotifyTake(pdTRUE,timeout);
+			ulTaskNotifyTake(pdTRUE,timeout);//等待esp8266传来数据
 		}
 	}
 }

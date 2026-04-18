@@ -652,6 +652,11 @@
               <FileType>1</FileType>
               <FilePath>../Core/Src/stm32f1xx_hal_timebase_tim.c</FilePath>
             </File>
+            <File>
+              <FileName>mqttsmart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\mqttsmart.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1183,61 +1188,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Middlewares/FreeRTOS</GroupName>
-          <Files>
-            <File>
-              <FileName>croutine.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Middlewares/Third_Party/FreeRTOS/Source/croutine.c</FilePath>
-            </File>
-            <File>
-              <FileName>event_groups.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Middlewares/Third_Party/FreeRTOS/Source/event_groups.c</FilePath>
-            </File>
-            <File>
-              <FileName>list.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Middlewares/Third_Party/FreeRTOS/Source/list.c</FilePath>
-            </File>
-            <File>
-              <FileName>queue.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Middlewares/Third_Party/FreeRTOS/Source/queue.c</FilePath>
-            </File>
-            <File>
-              <FileName>stream_buffer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c</FilePath>
-            </File>
-            <File>
-              <FileName>tasks.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Middlewares/Third_Party/FreeRTOS/Source/tasks.c</FilePath>
-            </File>
-            <File>
-              <FileName>timers.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Middlewares/Third_Party/FreeRTOS/Source/timers.c</FilePath>
-            </File>
-            <File>
-              <FileName>cmsis_os2.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c</FilePath>
-            </File>
-            <File>
-              <FileName>heap_4.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c</FilePath>
-            </File>
-            <File>
-              <FileName>port.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3/port.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>Drivers/DshanMCU-F103</GroupName>
           <Files>
             <File>
@@ -1358,7 +1308,62 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>MQTTclient/common</GroupName>
+          <GroupName>Middlewares/FreeRTOS</GroupName>
+          <Files>
+            <File>
+              <FileName>croutine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Middlewares/Third_Party/FreeRTOS/Source/croutine.c</FilePath>
+            </File>
+            <File>
+              <FileName>event_groups.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Middlewares/Third_Party/FreeRTOS/Source/event_groups.c</FilePath>
+            </File>
+            <File>
+              <FileName>list.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Middlewares/Third_Party/FreeRTOS/Source/list.c</FilePath>
+            </File>
+            <File>
+              <FileName>queue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Middlewares/Third_Party/FreeRTOS/Source/queue.c</FilePath>
+            </File>
+            <File>
+              <FileName>stream_buffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c</FilePath>
+            </File>
+            <File>
+              <FileName>tasks.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Middlewares/Third_Party/FreeRTOS/Source/tasks.c</FilePath>
+            </File>
+            <File>
+              <FileName>timers.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Middlewares/Third_Party/FreeRTOS/Source/timers.c</FilePath>
+            </File>
+            <File>
+              <FileName>cmsis_os2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c</FilePath>
+            </File>
+            <File>
+              <FileName>heap_4.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c</FilePath>
+            </File>
+            <File>
+              <FileName>port.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3/port.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Middlewares/MQTTclient/common</GroupName>
           <Files>
             <File>
               <FileName>mqtt_list.c</FileName>
@@ -1393,7 +1398,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>MQTTclient/mqtt</GroupName>
+          <GroupName>Middlewares/MQTTclient/mqtt</GroupName>
           <Files>
             <File>
               <FileName>MQTTConnectClient.c</FileName>
@@ -1448,7 +1453,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>MQTTclient/mqttclient</GroupName>
+          <GroupName>Middlewares/MQTTclient/mqttclient</GroupName>
           <Files>
             <File>
               <FileName>mqttclient.c</FileName>
@@ -1458,7 +1463,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>MQTTclient/network</GroupName>
+          <GroupName>Middlewares/MQTTclient/network</GroupName>
           <Files>
             <File>
               <FileName>nettype_tcp.c</FileName>
@@ -1473,7 +1478,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>MQTTclient/FreeRtos/platform</GroupName>
+          <GroupName>Middlewares/MQTTclient/FreeRtos/platform</GroupName>
           <Files>
             <File>
               <FileName>platform_memory.c</FileName>
@@ -1531,5 +1536,14 @@
     </components>
     <files/>
   </RTE>
+
+  <LayerInfo>
+    <Layers>
+      <Layer>
+        <LayName>01_freertos_template</LayName>
+        <LayPrjMark>1</LayPrjMark>
+      </Layer>
+    </Layers>
+  </LayerInfo>
 
 </Project>

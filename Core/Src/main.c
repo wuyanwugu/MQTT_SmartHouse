@@ -34,7 +34,7 @@
 #include "mqtt_config.h"
 #include "mqtt_log.h"
 #include "mqttclient.h"
-
+#include "mqttsmart.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -104,7 +104,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
-//  MX_ADC1_Init();//¹âÃôµç×è£¨±»Õ¼ÓÃ£©
+//  MX_ADC1_Init();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è£¨ï¿½ï¿½Õ¼ï¿½Ã£ï¿½
   MX_SPI1_Init();
   MX_TIM1_Init();
   MX_TIM2_Init();
@@ -186,13 +186,14 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-static void topic1_handler(void* client, message_data_t* msg)
+static void MQTTSmart_handler(void* client, message_data_t* msg)
 {
-    (void) client;
-    MQTT_LOG_I("-----------------------------------------------------------------------------------");
-    MQTT_LOG_I("%s:%d %s()...\ntopic: %s\nmessage:%s", __FILE__, __LINE__, __FUNCTION__, msg->topic_name, (char*)msg->message->payload);
-    MQTT_LOG_I("-----------------------------------------------------------------------------------");
-		
+	(void) client;
+	MQTT_LOG_I("-----------------------------------------------------------------------------------");
+	MQTT_LOG_I("%s:%d %s()...\ntopic: %s\nmessage:%s", __FILE__, __LINE__, __FUNCTION__, msg->topic_name, (char*)msg->message->payload);
+	MQTT_LOG_I("-----------------------------------------------------------------------------------");
+	/*æ¶ˆæ¯å¤„ç†å‡½æ•° eg.{led_on}*/	
+	mqttsmart_parse((char*)msg->message->payload);
 }
 
 void mqtt_publish_thread(void *arg)
@@ -242,7 +243,7 @@ void MQTT_Task(void*parm)
 			printf("MQTT Broker connect failed\r\n");
 		}
 		
-    res =mqtt_subscribe(client, "topic1", QOS0, topic1_handler);
+    res =mqtt_subscribe(client, "MQTTSmart", QOS0, MQTTSmart_handler);
     if(MQTT_SUCCESS_ERROR != res)
 		{
 			printf("MQTT Broker subscribe topic1 failed\r\n");

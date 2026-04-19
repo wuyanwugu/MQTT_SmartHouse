@@ -193,7 +193,7 @@ static void MQTTSmart_handler(void* client, message_data_t* msg)
 	MQTT_LOG_I("%s:%d %s()...\ntopic: %s\nmessage:%s", __FILE__, __LINE__, __FUNCTION__, msg->topic_name, (char*)msg->message->payload);
 	MQTT_LOG_I("-----------------------------------------------------------------------------------");
 	/*消息处理函数 eg.{led_on}*/	
-	mqttsmart_parse((char*)msg->message->payload);
+	mqttsmart_parse(client,(char*)msg->message->payload);
 }
 
 void mqtt_publish_thread(void *arg)
@@ -249,13 +249,13 @@ void MQTT_Task(void*parm)
 			printf("MQTT Broker subscribe topic1 failed\r\n");
 		}
 	
-		mqtt_message_t msg;
-		msg.qos = 0;
-    msg.payload = "test_task\r\n";
-    msg.payloadlen = strlen(msg.payload);
+//		mqtt_message_t msg;
+//		msg.qos = 0;
+//    msg.payload = "test_task\r\n";
+//    msg.payloadlen = strlen(msg.payload);
 		while(1)
 		{
-			mqtt_publish(client, "mcu_test", &msg);
+//			mqtt_publish(client, "mcu_test", &msg);
 			vTaskDelay(3000);
 		}
 }

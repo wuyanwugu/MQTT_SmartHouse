@@ -1,6 +1,6 @@
 #ifndef __MQTTSMART_H__
 #define __MQTTSMART_H__
-
+#include "mqttclient.h"
 // 定义智能家居指令类型枚举
 typedef enum {
     SMART_TYPE_UNKNOWN = 0,
@@ -27,6 +27,6 @@ typedef struct {
     char params[32];       // 参数（最多32字符）
 } SMART_Result_t;
 
-void mqttsmart_parse(char*msg);
+void mqttsmart_parse(mqtt_client_t* c,char*msg);
 
 #endif

@@ -68,7 +68,9 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-
+extern SemaphoreHandle_t g_mpu6050_mutex; //MPU6050互斥量(在mqttsmart.c中定义)
+extern SemaphoreHandle_t g_DHT11_mutex; //DHT11互斥量(在mqttsmart.c中定义)
+extern SemaphoreHandle_t g_OLED_mutex; //OLED互斥量(在mqttsmart.c中定义)
 
 TaskHandle_t AT_pars_handle;//AT指令分析任务句柄
 /* USER CODE END Variables */
@@ -94,7 +96,13 @@ void BSP_Init(void)
   DHT11_Init(); //DHT11初始化
   PassiveBuzzer_Init();//无源蜂鸣器初始化
   PassiveBuzzer_Control(0);
-	ColorLED_Set(0);//全彩LED初始化
+	ColorLED_Set_NoGreen(0);//全彩LED初始化
+}
+void mqttsmart_mutex_init(void)
+{
+  g_mpu6050_mutex = xSemaphoreCreateMutex();
+  g_DHT11_mutex = xSemaphoreCreateMutex();
+  g_OLED_mutex = xSemaphoreCreateMutex();
 }
 /* USER CODE END FunctionPrototypes */
 
@@ -112,6 +120,7 @@ void MX_FREERTOS_Init(void) {
 	AT_Init();//AT命令相关程序初始化
 			/*硬件初始化*/
   BSP_Init();
+  mqttsmart_mutex_init();//智能家居指令相关互斥量初始化
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -161,17 +170,26 @@ void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
-
-	
+  //sg90_Init(); //舵机初始化
 	for(;;)
 	{
-
-		vTaskDelay(100);
+		    // 测试最小值
+    sg90_SetAngle(0);
+    vTaskDelay(1000);
+    
+    // 测试中间值
+    sg90_SetAngle(90);
+    vTaskDelay(1000);
+    
+    // 测试最大值
+    sg90_SetAngle(180);
+    vTaskDelay(1000);	
+//		vTaskDelay(100);
     //Led_Test();
     //LCD_Test();
 	//MPU6050_Test(); 
 	//DS18B20_Test();
-	DHT11_Test();
+	//DHT11_Test();
 	//ActiveBuzzer_Test();
 	//PassiveBuzzer_Test();
 	//ColorLED_Test();

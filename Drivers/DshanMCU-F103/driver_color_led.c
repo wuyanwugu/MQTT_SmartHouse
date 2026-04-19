@@ -110,6 +110,51 @@ void ColorLED_Set(uint32_t color)
 }
 
 /**********************************************************************
+ * 函数名称： ColorLED_Set_NoGreen
+ * 功能描述： 全彩LED设置颜色函数（无G灯）
+ * 输入参数： color - 24bit颜色,格式为0x00RRGGBB
+ * 输出参数： 无
+ * 返 回 值： 无
+ * 修改日期：      版本号     修改人	      修改内容
+ * -----------------------------------------------
+ * 2023/08/04	     V1.0	  韦东山	      创建
+ ***********************************************************************/
+void ColorLED_Set_NoGreen(uint32_t color)
+{
+    TIM_OC_InitTypeDef sConfigR;
+    // TIM_OC_InitTypeDef sConfigG;
+    TIM_OC_InitTypeDef sConfigB;
+
+    int r,b;
+
+    r = (color >> 16) & 0xff;
+    // g = (color >> 8) & 0xff;
+    b = (color >> 0) & 0xff;
+
+    sConfigR.OCMode = TIM_OCMODE_PWM1;        // PWM 输出的两种模式:PWM1 当极性为低,CCR<CNT,输出低电平,反之高电平
+    sConfigR.OCPolarity = TIM_OCPOLARITY_LOW; // 设置极性为低(硬件上低电平亮灯)
+    sConfigR.OCFastMode = TIM_OCFAST_DISABLE; // 输出比较快速使能禁止(仅在 PWM1 和 PWM2 可设置)
+    sConfigR.Pulse = r*2000/255;              // 在 PWM1 模式下,通道 3(RLED)占空比
+
+    sConfigB.OCMode = TIM_OCMODE_PWM1;        // PWM 输出的两种模式:PWM1 当极性为低,CCR<CNT,输出低电平,反之高电平
+    sConfigB.OCPolarity = TIM_OCPOLARITY_LOW; // 设置极性为低(硬件上低电平亮灯)
+    sConfigB.OCFastMode = TIM_OCFAST_DISABLE; // 输出比较快速使能禁止(仅在 PWM1 和 PWM2 可设置)
+    sConfigB.Pulse = b*2000/255;              // 在 PWM1 模式下,通道 3(RLED)占空比
+
+    HAL_TIM_PWM_Stop(g_HPWM_ColorLED, CHANNEL_RED);
+    // HAL_TIM_PWM_Stop(g_HPWM_ColorLED, CHANNEL_GREEN);
+    HAL_TIM_PWM_Stop(g_HPWM_ColorLED, CHANNEL_BLUE);
+    
+    HAL_TIM_PWM_ConfigChannel(g_HPWM_ColorLED, &sConfigR, CHANNEL_RED);
+    // HAL_TIM_PWM_ConfigChannel(g_HPWM_ColorLED, &sConfigG, CHANNEL_GREEN);
+    HAL_TIM_PWM_ConfigChannel(g_HPWM_ColorLED, &sConfigB, CHANNEL_BLUE);
+
+    HAL_TIM_PWM_Start(g_HPWM_ColorLED, CHANNEL_RED);
+    // HAL_TIM_PWM_Start(g_HPWM_ColorLED, CHANNEL_GREEN);
+    HAL_TIM_PWM_Start(g_HPWM_ColorLED, CHANNEL_BLUE);    
+}
+
+/**********************************************************************
  * 函数名称： ColorLED_Test
  * 功能描述： 全彩LED测试程序
  * 输入参数： 无

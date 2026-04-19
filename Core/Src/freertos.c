@@ -171,7 +171,7 @@ void StartDefaultTask(void *argument)
     //LCD_Test();
 	//MPU6050_Test(); 
 	//DS18B20_Test();
-//	DHT11_Test();
+	DHT11_Test();
 	//ActiveBuzzer_Test();
 	//PassiveBuzzer_Test();
 	//ColorLED_Test();

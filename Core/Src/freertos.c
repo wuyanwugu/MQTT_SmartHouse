@@ -87,11 +87,10 @@ const osThreadAttr_t defaultTask_attributes = {
 /*硬件初始化函数*/
 void BSP_Init(void)
 {
-  Led_Control(1,0);    //LED初始化（在main.c中MX_GPIO_Init()初始化）
+   //LED初始化（在main.c中MX_GPIO_Init()初始化）
 	LCD_Init();  //OLED初始化
 	LCD_Clear();
 	sg90_Init(); //舵机初始化
-	sg90_SetAngle(0);
 	MPU6050_Init();//MPU6050初始化
   DHT11_Init(); //DHT11初始化
   PassiveBuzzer_Init();//无源蜂鸣器初始化
@@ -210,16 +209,16 @@ void StartDefaultTask(void *argument)
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
 /*----------------打印所有任务空闲栈大小----------------------*/
-//static char g_task_infor[200];
-//void vApplicationIdleHook(void*parm)
-//{
-//	vTaskList(g_task_infor);
-//		for(int i = 0 ;i<16;i++)
-//	{
-//		printf("-");
-//	}
-//	printf("\n\r\n\r");
-//	printf("%s\n\r",g_task_infor);
-//}
+// static char g_task_infor[200];
+// void vApplicationIdleHook(void*parm)
+// {
+// 	vTaskList(g_task_infor);
+// 		for(int i = 0 ;i<16;i++)
+// 	{
+// 		printf("-");
+// 	}
+// 	printf("\n\r\n\r");
+// 	printf("%s\n\r",g_task_infor);
+// }
 /* USER CODE END Application */
 

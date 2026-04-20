@@ -19,12 +19,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
-//#include "adc.h"
+// #include "adc.h"
+#include "dma.h"
 #include "i2c.h"
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
-//#include "usb.h"
+// #include "usb.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -103,9 +104,11 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_I2C1_Init();
-//  MX_ADC1_Init();//�������裨��ռ�ã�
+  // MX_ADC1_Init();
   MX_SPI1_Init();
+  // MX_USB_PCD_Init();
   MX_TIM1_Init();
   MX_TIM2_Init();
   MX_TIM3_Init();
@@ -118,10 +121,10 @@ int main(void)
   /* Init scheduler */
   osKernelInitialize();  /* Call init function for freertos objects (in cmsis_os2.c) */
   MX_FREERTOS_Init();
-	
+
   /* Start scheduler */
   osKernelStart();
-	
+
   /* We should never get here as control is now taken by the scheduler */
 
   /* Infinite loop */

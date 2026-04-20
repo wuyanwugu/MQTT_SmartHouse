@@ -46,14 +46,10 @@ void MX_USART1_UART_Init(void);
 void MX_USART3_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-/* uart1 发送*/
-//state ： 成功 HAL_OK ，失败 其他
-uint8_t uart1_write(const unsigned char *pData, uint16_t Size, uint32_t Timeout);
 /* uart3 发送*/
 //state ： 成功 HAL_OK ，失败 其他
 uint8_t uart3_write(const unsigned char *pData, uint16_t Size, uint32_t Timeout);
-/* uart3 读环形buf*/
-uint8_t uart3_read(uint8_t *pData, uint16_t Size, uint32_t Timeout);
+
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

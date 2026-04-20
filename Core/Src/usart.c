@@ -21,11 +21,11 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
-#define	g_circle_buff_len	512
+#define	g_circle_buff_len	512           //串口3环形buff长度
 static uint8_t g_rx_buf[g_circle_buff_len];
-static uint8_t g_uart1_rx_char;
-static uint8_t g_uart3_rx_char;
-circle_buf	g_circle_buff;
+static uint8_t g_uart1_rx_char;   //串口1接收数据变量
+static uint8_t g_uart3_rx_char;   //串口3接收数据变量
+circle_buf	g_circle_buff;        //串口3环形buff
 extern TaskHandle_t AT_pars_handle;//AT指令分析任务句柄
 
 /* USER CODE END 0 */
@@ -59,7 +59,7 @@ void MX_USART1_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART1_Init 2 */
-		/*??????1?????��?*/
+		/*开启串口1接收中断*/
 	HAL_UART_Receive_IT(&huart1,&g_uart1_rx_char, 1);
   /* USER CODE END USART1_Init 2 */
 
@@ -89,7 +89,7 @@ void MX_USART3_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART3_Init 2 */
-	/*??????3?????��?*/
+	/*开启串口3接收DMA*/
 	HAL_UART_Receive_DMA(&huart3,&g_uart3_rx_char, 1);
   /* USER CODE END USART3_Init 2 */
 

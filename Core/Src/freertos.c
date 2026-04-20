@@ -209,16 +209,16 @@ void StartDefaultTask(void *argument)
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
 /*----------------打印所有任务空闲栈大小----------------------*/
-// static char g_task_infor[200];
-// void vApplicationIdleHook(void*parm)
-// {
-// 	vTaskList(g_task_infor);
-// 		for(int i = 0 ;i<16;i++)
-// 	{
-// 		printf("-");
-// 	}
-// 	printf("\n\r\n\r");
-// 	printf("%s\n\r",g_task_infor);
-// }
+//static char g_task_infor[200];
+//void vApplicationIdleHook(void*parm)
+//{
+//	vTaskList(g_task_infor);
+//		for(int i = 0 ;i<16;i++)
+//	{
+//		printf("-");
+//	}
+//	printf("\n\r\n\r");
+//	printf("%s\n\r",g_task_infor);
+//}
 /* USER CODE END Application */
 

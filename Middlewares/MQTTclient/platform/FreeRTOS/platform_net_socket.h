@@ -26,12 +26,5 @@ int platform_net_socket_connect(const char *host, const char *port, int proto);
 int platform_net_socket_recv_timeout(int fd, unsigned char *buf, int len, int timeout);
 int platform_net_socket_write_timeout(int fd, unsigned char *buf, int len, int timeout);
 int platform_net_socket_close(int fd);
-#if 0
-int platform_net_socket_write(int fd, void *buf, size_t len);
-int platform_net_socket_recv(int fd, void *buf, size_t len, int flags);
-int platform_net_socket_set_block(int fd);
-int platform_net_socket_set_nonblock(int fd);
-int platform_net_socket_setsockopt(int fd, int level, int optname, const void *optval,uint32_t optlen);
-#endif
 
 #endif /* _PLATFORM_NET_SOCKET_H_ */

@@ -11,10 +11,10 @@
 #include <stdint.h>
 
 /*AT回复宏*/
-#define AT_OK						0
-#define AT_ERR					-1
-#define AT_TIMEOUT			-2
-#define AT_RESP_LEN			128
+#define AT_OK			0
+#define AT_ERR			-1
+#define AT_TIMEOUT		-2
+#define AT_RESP_LEN		128
 #define AT_SEND_TIMEOUT	1000
 
 /*AT命令类型*/
@@ -34,7 +34,7 @@ int AT_send_data(char* data ,int data_len,int timeout);
 int AT_Recv_data(char *c,unsigned int timeout);
 
 /* AT命令发送函数*/
-int AT_send_cmd(char* cmd ,int cmd_len,char* resp,int resp_len,int timeout);
+int AT_send_cmd(char* cmd ,int cmd_len,int timeout);
 
 /*AT解析任务*/
 void AT_Parse(void*parmas);

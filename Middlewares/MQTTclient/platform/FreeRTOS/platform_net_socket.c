@@ -10,10 +10,17 @@
 #include "string.h"
 #include "stdio.h"
 #include "stm32f1xx_hal.h"
+/*WiFi 配置宏*/
 #define JAP_SSID			"8B116"
 #define JAP_passwoed	"8B116369852"
 
-
+/**********************************************************************
+ * 函数名称： platform_net_socket_connect	
+ * 功能描述： 连接到服务器,一直连接直到成功才返回
+ * 输入参数： host 服务器IP地址，port 服务器端口号，proto 协议类型
+ * 输出参数： 无
+ * 返 回 值： 0 成功
+ ***********************************************************************/
 int platform_net_socket_connect(const char *host, const char *port, int proto)
 {
 	char cmd[50]={0};
@@ -22,13 +29,13 @@ int platform_net_socket_connect(const char *host, const char *port, int proto)
 	while(1)
 	{
 		/*先断开连接*/
-		ret = AT_send_cmd("AT+CIPCLOSE",(int)strlen("AT+CIPCLOSE"), NULL, 0, 2000);
+		ret = AT_send_cmd("AT+CIPCLOSE",(int)strlen("AT+CIPCLOSE"),2000);
 		if(ret)
 		{
 			printf("\r\nAT+CIPCLOSE faliue,ret = %d\r\n",ret);
 		}
 		/*1. 配置 WiFi 模式*/
-		ret = AT_send_cmd("AT+CWMODE=3",(int)strlen("AT+CWMODE=3"),NULL,NULL,2000);
+		ret = AT_send_cmd("AT+CWMODE=3",(int)strlen("AT+CWMODE=3"),2000);
 		if(ret)
 		{
 			printf("\r\nAT+CWMODE=3 faliue,ret = %d\r\n",ret);
@@ -40,7 +47,7 @@ int platform_net_socket_connect(const char *host, const char *port, int proto)
 			printf("\r\nWIFI disconnet faliue,ret = %d\r\n",ret);
 		}
 		/*2.2连接路路由器*/
-		ret = AT_send_cmd("AT+CWJAP=\"" JAP_SSID "\",\"" JAP_passwoed "\"",(int)strlen("AT+CWJAP=\"" JAP_SSID "\",\"" JAP_passwoed "\""),NULL,NULL,20000);
+		ret = AT_send_cmd("AT+CWJAP=\"" JAP_SSID "\",\"" JAP_passwoed "\"",(int)strlen("AT+CWJAP=\"" JAP_SSID "\",\"" JAP_passwoed "\""),20000);
 		if(ret)
 		{
 			printf("\r\nWIFI connect faliue,ret = %d\r\n",ret);
@@ -55,7 +62,7 @@ int platform_net_socket_connect(const char *host, const char *port, int proto)
 		{
 			sprintf(cmd,"AT+CIPSTART=\"UDP\",\"%s\",%s",host,port);
 		}
-		ret = AT_send_cmd(cmd,(int)strlen(cmd),NULL,NULL,10000);
+		ret = AT_send_cmd(cmd,(int)strlen(cmd),10000);
 		if(ret)
 		{
 			printf("\r\nTCP connect faliue,ret = %d\r\n",ret);
@@ -70,7 +77,13 @@ int platform_net_socket_connect(const char *host, const char *port, int proto)
 	return 0;
 }
 
-
+/**********************************************************************
+ * 函数名称： platform_net_socket_recv_timeout	
+ * 功能描述： 接收数据,超时时间timeout
+ * 输入参数： fd 文件描述符， buf 接收数据缓冲区，len 接收数据长度，timeout 超时时间
+ * 输出参数： 无
+ * 返 回 值： len 接收数据长度
+ ***********************************************************************/
 int platform_net_socket_recv_timeout(int fd, unsigned char *buf, int len, int timeout)
 {
 	int i=0;
@@ -86,14 +99,20 @@ int platform_net_socket_recv_timeout(int fd, unsigned char *buf, int len, int ti
 	}
 	return len;
 }
-
+/**********************************************************************
+ * 函数名称： platform_net_socket_write_timeout
+ * 功能描述： 发送数据,超时时间timeout
+ * 输入参数： fd 文件描述符， buf 发送数据缓冲区，len 发送数据长度，timeout 超时时间
+ * 输出参数： 无
+ * 返 回 值： len 发送数据长度
+ ***********************************************************************/
 int platform_net_socket_write_timeout(int fd, unsigned char *buf, int len, int timeout)
 {
 	volatile int ret;
 	char cmd[20]={0};
 	sprintf(cmd,"AT+CIPSEND=%d",len);
 		/*1.发AT命令AT+CIPSEND=*/
-		ret = AT_send_cmd(cmd,(int)strlen(cmd),NULL,NULL,timeout);
+		ret = AT_send_cmd(cmd,(int)strlen(cmd),timeout);
 		if(ret)
 		{
 			printf("\r\nAT+CIPSEND faliue,ret = %d\r\n",ret);
@@ -109,35 +128,14 @@ int platform_net_socket_write_timeout(int fd, unsigned char *buf, int len, int t
 	/*成功写*/
 	return len;
 }
-
+/**********************************************************************
+ * 函数名称： platform_net_socket_close	
+ * 功能描述： 关闭连接
+ * 输入参数： 无
+ * 输出参数： 无
+ * 返 回 值： 0 成功，其他值 失败
+ ***********************************************************************/
 int platform_net_socket_close(int fd)
 {
-  return 	AT_send_cmd("AT+CWQAP",(int)strlen("AT+CWQAP"),NULL,NULL,2000);
+  return 	AT_send_cmd("AT+CWQAP",(int)strlen("AT+CWQAP"),2000);
 }
-
-#if 0
-int platform_net_socket_recv(int fd, void *buf, size_t len, int flags)
-{
-
-}
-
-int platform_net_socket_write(int fd, void *buf, size_t len)
-{
-	
-}
-
-int platform_net_socket_set_block(int fd)
-{
-
-}
-
-int platform_net_socket_set_nonblock(int fd)
-{
-
-}
-
-int platform_net_socket_setsockopt(int fd, int level, int optname, const void *optval,uint32_t optlen)
-{
-
-}
-#endif

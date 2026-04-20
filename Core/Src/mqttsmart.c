@@ -20,7 +20,7 @@ SemaphoreHandle_t g_OLED_mutex; //OLED互斥量
 static char buf[100] = { 0 };
 
 static const SMART_Command_t g_smart_command_table[] = {
-    {"led_", SMART_TYPE_LED},//led指令格式 eg.{led_on} {led_off}
+    {"led", SMART_TYPE_LED},//led指令格式 eg.{led_on} {led_off}
     {"buzzer", SMART_TYPE_BUZZER},//buzzer指令格式 eg.{buzzer_on} {buzzer_off}
     {"sg90", SMART_TYPE_SG90},//sg90指令格式 eg.{sg90_angle_90}
     {"dht11", SMART_TYPE_DHT11},//dht11指令格式 eg.{dht11_read}
@@ -59,6 +59,27 @@ static void mqttsmart_msg_parse(mqtt_client_t* c,SMART_Result_t result)
             {
                 Led_Control(1,0);
             }
+            else if(strstr(result.params,"oled"))
+            {
+                printf("OLED command worong, please enter OLED_print_x_y_text or OLED_clear\r\n");
+                sprintf(buf, "OLED command worong, please enter OLED_print_x_y_text or OLED_clear\r\n");
+                publish_info.payloadlen = strlen(buf);
+                mqtt_publish(c, "test_task", &publish_info);
+            }
+            else if(strstr(result.params,"color_led"))
+            {
+                printf("COLOR_LED command worong, please enter COLOR_LED_xxxxxx to set color\r\n");
+                sprintf(buf, "COLOR_LED command worong, please enter COLOR_LED_xxxxxx to set color\r\n");
+                publish_info.payloadlen = strlen(buf);
+                mqtt_publish(c, "test_task", &publish_info);
+             }
+            else
+            {
+                printf("Unknown LED command: %s\r\n", result.params);
+                sprintf(buf, "Unknown LED command: %s,please enter led_on or led_off\r\n", result.params);
+                publish_info.payloadlen = strlen(buf);
+                mqtt_publish(c, "test_task", &publish_info);
+             }
         break;
 
         case SMART_TYPE_BUZZER:
@@ -71,6 +92,13 @@ static void mqttsmart_msg_parse(mqtt_client_t* c,SMART_Result_t result)
             {
                 PassiveBuzzer_Control(0);
             }
+            else
+            {
+                printf("Unknown Buzzer command: %s\r\n", result.params);
+                sprintf(buf, "Unknown Buzzer command: %s,please enter buzzer_on or buzzer_off\r\n", result.params);
+                publish_info.payloadlen = strlen(buf);
+                mqtt_publish(c, "test_task", &publish_info);
+            }
         break;
 
         case SMART_TYPE_SG90:
@@ -81,62 +109,91 @@ static void mqttsmart_msg_parse(mqtt_client_t* c,SMART_Result_t result)
                 int angle = atoi(angle_str);
                 sg90_SetAngle(angle);
             }
+            else
+            {
+                printf("Unknown SG90 command: %s\r\n", result.params);
+                sprintf(buf, "Unknown SG90 command: %s,please enter sg90_angle_x\r\n", result.params);
+                publish_info.payloadlen = strlen(buf);
+                mqtt_publish(c, "test_task", &publish_info);
+            }
         break;
 
         case SMART_TYPE_DHT11:
             // 解析DHT11指令参数并读取温湿度数据
 			/*互斥量读数据*/
-            if(xSemaphoreTake(g_DHT11_mutex, 0)==pdFALSE)
+            if(strstr(result.params,"read"))
             {
-                printf("DHT11 is busy, please try again later.\r\n");
-                sprintf(buf, "DHT11 is busy, please try again later.\r\n");
-                publish_info.payloadlen = strlen(buf);
-                mqtt_publish(c, "test_task", &publish_info);
-                return;
-            }
-            if(DHT11_Read(&hum, &temp)==0)
-            {
-                printf("DHT11 read success: humidity = %d%%, temperature = %d*C\r\n", hum, temp);
-                sprintf(buf, "DHT11 read success: humidity = %d%%, temperature = %d*C\r\n", hum, temp);
-                publish_info.payloadlen = strlen(buf);
-                mqtt_publish(c, "test_task", &publish_info);
+                // 读取DHT11数据
+                if(xSemaphoreTake(g_DHT11_mutex, 0)==pdFALSE)
+                {
+                    printf("DHT11 is busy, please try again later.\r\n");
+                    sprintf(buf, "DHT11 is busy, please try again later.\r\n");
+                    publish_info.payloadlen = strlen(buf);
+                    mqtt_publish(c, "test_task", &publish_info);
+                    return;
+                }
+                if(DHT11_Read(&hum, &temp)==0)
+                {
+                    printf("DHT11 read success: humidity = %d%%, temperature = %d*C\r\n", hum, temp);
+                    sprintf(buf, "DHT11 read success: humidity = %d%%, temperature = %d*C\r\n", hum, temp);
+                    publish_info.payloadlen = strlen(buf);
+                    mqtt_publish(c, "test_task", &publish_info);
+                }
+                else
+                {
+                    printf("DHT11 read failed\r\n");
+                    sprintf(buf, "DHT11 read failed\r\n");
+                    publish_info.payloadlen = strlen(buf);
+                    mqtt_publish(c, "test_task", &publish_info);
+                }
+                xSemaphoreGive(g_DHT11_mutex);
             }
             else
             {
-                printf("DHT11 read failed\r\n");
-                sprintf(buf, "DHT11 read failed\r\n");
+                printf("Unknown DHT11 command: %s\r\n", result.params);
+                sprintf(buf, "Unknown DHT11 command: %s,please enter dht11_read to read humidity and temperature\r\n", result.params);
                 publish_info.payloadlen = strlen(buf);
                 mqtt_publish(c, "test_task", &publish_info);
             }
-            xSemaphoreGive(g_DHT11_mutex);
         break;
 
         case SMART_TYPE_MPU6050:
             // 解析MPU6050指令参数并读取加速度和陀螺仪数据
 			/*互斥量读数据*/
-            if(xSemaphoreTake(g_mpu6050_mutex, 0)==pdFALSE)
+            if(strstr(result.params,"read"))
             {
-                printf("MPU6050 is busy, please try again later.\r\n");
-                sprintf(buf, "MPU6050 is busy, please try again later.\r\n");
+                // 读取MPU6050数据
+                if(xSemaphoreTake(g_mpu6050_mutex, 0)==pdFALSE)
+                {
+                    printf("MPU6050 is busy, please try again later.\r\n");
+                    sprintf(buf, "MPU6050 is busy, please try again later.\r\n");
+                    publish_info.payloadlen = strlen(buf);
+                    mqtt_publish(c, "test_task", &publish_info);
+                    return;
+                }
+                if(MPU6050_ReadData(&AccX, &AccY, &AccZ, &GyroX, &GyroY, &GyroZ)==0)
+                {
+                    printf("MPU6050 read success: AccX = %d, AccY = %d, AccZ = %d, GyroX = %d, GyroY = %d, GyroZ = %d\r\n", AccX, AccY, AccZ, GyroX, GyroY, GyroZ);
+                    sprintf(buf, "MPU6050 read success: AccX = %d, AccY = %d, AccZ = %d, GyroX = %d, GyroY = %d, GyroZ = %d\r\n", AccX, AccY, AccZ, GyroX, GyroY, GyroZ);
+                    publish_info.payloadlen = strlen(buf);
+                    mqtt_publish(c, "test_task", &publish_info);
+                }
+                else            
+                {
+                    printf("MPU6050 read failed\r\n");
+                    sprintf(buf, "MPU6050 read failed\r\n");
+                    publish_info.payloadlen = strlen(buf);
+                    mqtt_publish(c, "test_task", &publish_info);
+                }
+                xSemaphoreGive(g_mpu6050_mutex);
+            }
+            else
+            {
+                printf("Unknown MPU6050 command: %s\r\n", result.params);
+                sprintf(buf, "Unknown MPU6050 command: %s,please enter mpu6050_read to read accelerometer and gyroscope data\r\n", result.params);
                 publish_info.payloadlen = strlen(buf);
                 mqtt_publish(c, "test_task", &publish_info);
-                return;
             }
-            if(MPU6050_ReadData(&AccX, &AccY, &AccZ, &GyroX, &GyroY, &GyroZ)==0)
-            {
-                printf("MPU6050 read success: AccX = %d, AccY = %d, AccZ = %d, GyroX = %d, GyroY = %d, GyroZ = %d\r\n", AccX, AccY, AccZ, GyroX, GyroY, GyroZ);
-                sprintf(buf, "MPU6050 read success: AccX = %d, AccY = %d, AccZ = %d, GyroX = %d, GyroY = %d, GyroZ = %d\r\n", AccX, AccY, AccZ, GyroX, GyroY, GyroZ);
-                publish_info.payloadlen = strlen(buf);
-                mqtt_publish(c, "test_task", &publish_info);
-            }
-            else            
-            {
-                printf("MPU6050 read failed\r\n");
-                sprintf(buf, "MPU6050 read failed\r\n");
-                publish_info.payloadlen = strlen(buf);
-                mqtt_publish(c, "test_task", &publish_info);
-            }
-            xSemaphoreGive(g_mpu6050_mutex);
         break;
 
         case SMART_TYPE_COLOR_LED:
@@ -147,47 +204,73 @@ static void mqttsmart_msg_parse(mqtt_client_t* c,SMART_Result_t result)
                 uint32_t color = strtoul(color_str, NULL, 16);
                 ColorLED_Set_NoGreen(color);
             }
+            else
+            {
+                printf("Unknown COLOR LED command: %s\r\n", result.params);
+                sprintf(buf, "Unknown COLOR LED command: %s,please enter COLOR_LED_xxxxxx to set color\r\n", result.params);
+                publish_info.payloadlen = strlen(buf);
+                mqtt_publish(c, "test_task", &publish_info);
+            }
         break;
 
         case SMART_TYPE_OLED:
             // 解析OLED指令参数并控制OLED显示
-            if(xSemaphoreTake(g_OLED_mutex, 0)==pdFALSE)
-            {
-                printf("OLED is busy, please try again later.\r\n");
-                sprintf(buf, "OLED is busy, please try again later.\r\n");
-                publish_info.payloadlen = strlen(buf);
-                mqtt_publish(c, "test_task", &publish_info);
-                return;
-            }
-            LCD_Clear();
             if(strstr(result.params,"OLED_print_"))
             {
-                //OLED_print_x_y_text
-                char* text = strstr(result.params,"OLED_print_") + strlen("OLED_print_");
-                char* x_str = strtok(text, "_");
-                char* y_str = strtok(NULL, "_");
-                int x = atoi(x_str);
-                int y = atoi(y_str);
-                text = strtok(NULL, "_");
-                if(text != NULL)
+                if(xSemaphoreTake(g_OLED_mutex, 0)==pdFALSE)
                 {
-                    char* last_brace = strrchr(text, '}');
-                    if(last_brace != NULL)
-                    {
-                        *last_brace = '\0';
-                    }
+                    printf("OLED is busy, please try again later.\r\n");
+                    sprintf(buf, "OLED is busy, please try again later.\r\n");
+                    publish_info.payloadlen = strlen(buf);
+                    mqtt_publish(c, "test_task", &publish_info);
+                    return;
                 }
-                LCD_PrintString(x, y, text);
+                LCD_Clear();
+                if(strstr(result.params,"OLED_print_"))
+                {
+                    //OLED_print_x_y_text
+                    char* text = strstr(result.params,"OLED_print_") + strlen("OLED_print_");
+                    char* x_str = strtok(text, "_");
+                    char* y_str = strtok(NULL, "_");
+                    int x = atoi(x_str);
+                    int y = atoi(y_str);
+                    text = strtok(NULL, "_");
+                    if(text != NULL)
+                    {
+                        char* last_brace = strrchr(text, '}');
+                        if(last_brace != NULL)
+                        {
+                            *last_brace = '\0';
+                        }
+                    }
+                    LCD_PrintString(x, y, text);
+                }
+                xSemaphoreGive(g_OLED_mutex);
             }
             else if(strstr(result.params,"OLED_clear"))
             {
+                if(xSemaphoreTake(g_OLED_mutex, 0)==pdFALSE)
+                {
+                    printf("OLED is busy, please try again later.\r\n");
+                    sprintf(buf, "OLED is busy, please try again later.\r\n");
+                    publish_info.payloadlen = strlen(buf);
+                    mqtt_publish(c, "test_task", &publish_info);
+                    return;
+                }
                 LCD_Clear();
+                xSemaphoreGive(g_OLED_mutex);
+            }            
+            else
+            {
+                printf("Unknown OLED command: %s\r\n", result.params);
+                sprintf(buf, "Unknown OLED command: %s,please enter OLED_print_x_y_text or OLED_clear\r\n", result.params);
+                publish_info.payloadlen = strlen(buf);
+                mqtt_publish(c, "test_task", &publish_info);
             }
-            xSemaphoreGive(g_OLED_mutex);
         break;
+        /*其他外设添加操作*/
         default:
-            
-            break;
+        break;
     }
 }
 /**********************************************************************
@@ -222,7 +305,7 @@ void mqttsmart_parse(mqtt_client_t* c,char*msg)
                 break;
             }
         }
-        if(i > sizeof(g_smart_command_table)/sizeof(g_smart_command_table[0]))
+        if(i >=sizeof(g_smart_command_table)/sizeof(g_smart_command_table[0]))
         {
  
             result.type = SMART_TYPE_UNKNOWN;
@@ -245,6 +328,5 @@ void mqttsmart_parse(mqtt_client_t* c,char*msg)
         sprintf(buf, "Invalid command format received: %s\r\n", msg);
         publish_info.payloadlen = strlen(buf);
         mqtt_publish(c, "test_task", &publish_info);
-        return;
     }
 }

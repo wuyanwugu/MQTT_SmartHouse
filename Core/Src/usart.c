@@ -90,6 +90,7 @@ void MX_USART3_UART_Init(void)
   }
   /* USER CODE BEGIN USART3_Init 2 */
 	/*开启串口3接收DMA*/
+	HAL_Delay(240);
 	HAL_UART_Receive_DMA(&huart3,&g_uart3_rx_char, 1);
   /* USER CODE END USART3_Init 2 */
 

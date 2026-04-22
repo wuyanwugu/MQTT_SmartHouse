@@ -169,21 +169,22 @@ void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
+	LCD_Init();
+	// 清屏
+	LCD_Clear();
+	int i = 0;
   //sg90_Init(); //舵机初始化
 	for(;;)
 	{
-		    // 测试最小值
-    sg90_SetAngle(0);
-    vTaskDelay(1000);
-    
-    // 测试中间值
-    sg90_SetAngle(90);
-    vTaskDelay(1000);
-    
-    // 测试最大值
-    sg90_SetAngle(180);
-    vTaskDelay(1000);	
-//		vTaskDelay(100);
+		LCD_PrintString(i, 2, "Hello World!");
+		i++;
+		if(i >3)
+		{
+			i = 0;
+			LCD_Clear();
+		}
+		
+		vTaskDelay(2000);
     //Led_Test();
     //LCD_Test();
 	//MPU6050_Test(); 

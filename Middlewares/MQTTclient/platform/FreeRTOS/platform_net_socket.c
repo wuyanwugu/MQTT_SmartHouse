@@ -28,6 +28,7 @@ int platform_net_socket_connect(const char *host, const char *port, int proto)
 	volatile int ret;
 	while(1)
 	{
+		
 		/*先断开连接*/
 		ret = AT_send_cmd("AT+CIPCLOSE",(int)strlen("AT+CIPCLOSE"),2000);
 		if(ret)
@@ -47,7 +48,7 @@ int platform_net_socket_connect(const char *host, const char *port, int proto)
 			printf("\r\nWIFI disconnet faliue,ret = %d\r\n",ret);
 		}
 		/*2.2连接路路由器*/
-		ret = AT_send_cmd("AT+CWJAP=\"" JAP_SSID "\",\"" JAP_passwoed "\"",(int)strlen("AT+CWJAP=\"" JAP_SSID "\",\"" JAP_passwoed "\""),20000);
+		ret = AT_send_cmd("AT+CWJAP=\"" JAP_SSID "\",\"" JAP_passwoed "\"",(int)strlen("AT+CWJAP=\"" JAP_SSID "\",\"" JAP_passwoed "\""),10000);
 		if(ret)
 		{
 			printf("\r\nWIFI connect faliue,ret = %d\r\n",ret);
